@@ -1,7 +1,11 @@
 const choices = ['rock', 'paper', 'scissors'];
+const winners = [];
 
-function game() {
-    playRound();
+function playGame() {
+    for (let i = 1 ; i <= 5 ; i++) {
+        playRound(i);
+    }
+    logWins();
 }
 
 function getComputerChoice() {
@@ -16,12 +20,17 @@ function getPlayerChoice() {
     }
     input = input.toLowerCase();
     let check = validateInput(input);
-    if (check == true) {
-        console.log(input);
+    while (check == false) {
+        input = prompt("Please type Rock, Paper, or Scissors. Check spelling!");
+        while (input == null) {
+            input = prompt("Type Rock, Paper, or Scissors");
+        }
+        input = input.toLowerCase();
+        check = validateInput(input);
     }
+    return input;
 }
 
-getPlayerChoice();
 
 //Validate user input
 function validateInput(userInput) {
@@ -33,38 +42,64 @@ function validateInput(userInput) {
 }
 
 
-function playRound(playerSelection, computerSelection) {
+function playRound(round) {
 
-    if (playerSelection.toLowerCase() === 'rock') {
-        if (computerSelection === 'rock') {
-            return "Tie!"
-        } else if (computerSelection === 'paper') {
-            return "You lose! Paper beats Rock"
-        } else {
-            return "You Win! Rock beats Scissors"
-        }
-    } else if (playerSelection.toLowerCase() === 'paper') {
-        if (computerSelection === 'rock') {
-            return "You Win! Paper beats Rock"
-        } else if (computerSelection === 'paper') {
-            return "Tie!"
-        } else {
-            return "You Lose! Scissors beat Paper"
-        }
-    } else if (playerSelection.toLowerCase() === 'scissors') {
-        if (computerSelection === 'rock') {
-            return "You Lose! Rock beats Scissors"
-        } else if (computerSelection === 'paper') {
-            return "You Win! Scissors beat Paper"
-        } else {
-            return "Tie"
+    let playerSelection = getPlayerChoice();
+    let computerSelection = getComputerChoice();
+
+    console.log(playerSelection, computerSelection);
+    function checkWinner(playerSelect, computerSelect) {
+        if (playerSelect.toLowerCase() === 'rock') {
+            if (computerSelect === 'rock') {
+                return "Tie!"
+            } else if (computerSelect === 'paper') {
+                return "You Lose! Paper beats Rock"
+            } else {
+                return "You Win! Rock beats Scissors"
+            }
+        } else if (playerSelect.toLowerCase() === 'paper') {
+            if (computerSelect === 'rock') {
+                return "You Win! Paper beats Rock"
+            } else if (computerSelect === 'paper') {
+                return "Tie!"
+            } else {
+                return "You Lose! Scissors beat Paper"
+            }
+        } else if (playerSelect.toLowerCase() === 'scissors') {
+            if (computerSelect === 'rock') {
+                return "You Lose! Rock beats Scissors"
+            } else if (computerSelect === 'paper') {
+                return "You Win! Scissors beat Paper"
+            } else {
+                return "Tie"
+            }
         }
     }
+    const winner = checkWinner(playerSelection, computerSelection);
+  
+    winners.push(winner);
+    logRound(playerSelection, computerSelection, winner, round);
 }
 
-let playerSelection = "Paper";
-let computerSelection = getComputerChoice();
-console.log(playRound(playerSelection, computerSelection));
+function logWins() {
+    let playerWins = winners.filter((item) => item.startsWith("You Win")).length;
+    let computerWins = winners.filter((item) => item.startsWith("You Lose")).length;
+    let ties = winners.filter((item) => item.startsWith("Tie")).length;
+    console.log('Results');
+    console.log("Player Wins: ", playerWins);
+    console.log("Computer Wins: ", computerWins);
+    console.log("Ties: ", ties);
+}
+
+function logRound(playerChoice, computerChoice, winner, round) {
+    console.log("Round: ", round);
+    console.log("Player Chose: ", playerChoice);
+    console.log("Computer Chose: ", computerChoice);
+    console.log(winner);
+    console.log("-----------------------------------");
+}
+
+
 
 
 
